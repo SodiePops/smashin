@@ -12,7 +12,12 @@ export default {
   plugins: [
     typescript({ typescript: require('typescript')} ),
     resolve({ module: true, jsnext: true, main: true }),
-    commonjs(),
+    commonjs({
+      namedExports: {
+        '../tudi/node_modules/pixi.js/lib/index.js': ['autoDetectRenderer', 'Container'],
+        '../tudi/node_modules/pixi.js/lib/polyfill/Math.sign.js': ['default'],
+      }
+    }),
     builtins(),
   ],
 };
