@@ -1,0 +1,53 @@
+{
+  "name": "smashin",
+  "version": "1.0.0",
+  "description": "Web based smashin game.",
+  "main": "dist/game.js",
+  "scripts": {
+    "precommit": "npm run lint",
+    "prepush": "npm run lint",
+    "start:dev": "rollup --config rollup.config.js -w",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && rollup --config rollup.config.js",
+    "lint": "tslint -p ./tsconfig.json --type-check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SodiePops/smashin.git"
+  },
+  "contributors": [
+    {
+      "name": "Ian J Sikes",
+      "email": "ianjsikes@gmail.com"
+    },
+    {
+      "name": "Enrique Piqueras"
+    },
+    {
+      "name": "Owen Wolf",
+      "email": "owen@gowolf.io"
+    },
+    {
+      "name": "Avelina Kim",
+      "email": "avelina@gmail.com"
+    }
+  ],
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/SodiePops/smashin/issues"
+  },
+  "homepage": "https://github.com/SodiePops/smashin#readme",
+  "devDependencies": {
+    "husky": "^0.13.3",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-builtins": "^2.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-watch": "^3.2.2",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2"
+  },
+  "dependencies": {}
+}
