@@ -6,9 +6,9 @@
   "scripts": {
     "precommit": "npm run lint",
     "prepush": "npm run lint",
-    "start": "rollup --config rollup.config.js -w",
+    "start": "NODE_ENV=development rollup --config rollup.config.js -w",
     "clean": "rimraf ./dist",
-    "build": "npm run clean && rollup --config rollup.config.js",
+    "build": "NODE_ENV=production npm run clean && rollup --config rollup.config.js",
     "lint": "tslint --project ./tsconfig.json --type-check"
   },
   "repository": {
@@ -42,8 +42,10 @@
     "rimraf": "^2.6.1",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-livereload": "^0.4.0",
     "rollup-plugin-node-builtins": "^2.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-serve": "^0.3.0",
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-watch": "^3.2.2",
     "tslint": "<5",

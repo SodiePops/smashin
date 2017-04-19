@@ -2,8 +2,10 @@ import typescript from 'rollup-plugin-typescript';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import builtins from 'rollup-plugin-node-builtins';
+import serve from 'rollup-plugin-serve'
+import livereload from 'rollup-plugin-livereload'
 
-export default {
+const config = {
   entry: 'src/index.ts',
   format: 'iife',
   dest: 'dist/game.js',
@@ -21,3 +23,9 @@ export default {
     builtins(),
   ],
 };
+
+if (process.env.NODE_ENV === 'development') {
+  config.plugins.push(serve('.'), livereload())
+}
+
+export default config;
