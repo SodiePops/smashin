@@ -1,9 +1,8 @@
-import typescript from 'rollup-plugin-typescript';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import builtins from 'rollup-plugin-node-builtins';
-import serve from 'rollup-plugin-serve'
-import livereload from 'rollup-plugin-livereload'
+import typescript from 'rollup-plugin-typescript'
+import resolveNodeModules from 'rollup-plugin-node-resolve'
+import commonjs from 'rollup-plugin-commonjs'
+import builtins from 'rollup-plugin-node-builtins'
+import builtinsGlobals from 'rollup-plugin-node-globals'
 
 const config = {
   entry: 'src/index.ts',
@@ -13,7 +12,7 @@ const config = {
 
   plugins: [
     typescript({ typescript: require('typescript')} ),
-    resolve({ module: true, jsnext: true, main: true }),
+    resolveNodeModules({ module: true, jsnext: true, main: true }),
     commonjs({
       namedExports: {
         '../tudi/node_modules/pixi.js/lib/index.js': ['autoDetectRenderer', 'Container'],
@@ -21,11 +20,12 @@ const config = {
       }
     }),
     builtins(),
+    builtinsGlobals(),
   ],
-};
-
-if (process.env.NODE_ENV === 'development') {
-  config.plugins.push(serve('.'), livereload())
 }
 
-export default config;
+if (process.env.NODE_ENV === 'development') {
+  config.plugins.push(require('rollup-plugin-serve')('.'), require('rollup-plugin-livereload')())
+}
+
+export default config
