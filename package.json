@@ -6,10 +6,10 @@
   "scripts": {
     "precommit": "npm run lint",
     "prepush": "npm run lint",
-    "start:dev": "rollup --config rollup.config.js -w",
+    "start": "rollup --config rollup.config.js -w",
     "clean": "rimraf ./dist",
     "build": "npm run clean && rollup --config rollup.config.js",
-    "lint": "tslint -p ./tsconfig.json --type-check"
+    "lint": "tslint --project ./tsconfig.json --type-check"
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,8 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-watch": "^3.2.2",
-    "tslint": "^5.1.0",
+    "tslint": "<5",
+    "tslint-microsoft-contrib": "^4.0.1",
     "typescript": "^2.2.2"
   },
   "dependencies": {}
