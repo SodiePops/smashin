@@ -1,5 +1,5 @@
 /**
- * Entry point
+ * Entry point.
  */
 import { Game } from 'tudi'
 
