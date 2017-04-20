@@ -8,7 +8,7 @@ const config = {
   entry: 'src/index.ts',
   format: 'iife',
   dest: 'dist/game.js',
-  moduleName: 'tudi',
+  moduleName: 'smashin',
 
   plugins: [
     typescript({ typescript: require('typescript')} ),
