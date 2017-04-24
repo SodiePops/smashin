@@ -1,6 +1,6 @@
 import * as tudi from 'tudi'
 
-export default class PlayerController extends tudi.Component {
+export default class PlayerController extends tudi.Components.Component {
   name: string = 'playerController'
 
   setup (): void {

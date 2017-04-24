@@ -15,7 +15,7 @@ const config = {
     resolveNodeModules({ module: true, jsnext: true, main: true }),
     commonjs({
       namedExports: {
-        '../tudi/node_modules/pixi.js/lib/index.js': ['autoDetectRenderer', 'Container'],
+        '../tudi/node_modules/pixi.js/lib/index.js': ['autoDetectRenderer', 'Container', 'Sprite'],
         '../tudi/node_modules/pixi.js/lib/polyfill/Math.sign.js': ['default'],
       }
     }),
