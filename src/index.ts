@@ -1,56 +1,49 @@
 /**
  * Entry point.
  */
+
 import * as tudi from 'tudi'
 import PlayerController from './PlayerController'
-const Vec2: typeof tudi.Math.Vec2 = tudi.Math.Vec2
-
-const child1: tudi.Entity = new tudi.Entity(
-  'child1',
-  {position: new Vec2(5, 15)},
-  [
-    new tudi.Components.SpriteComponent('assets/enemy.png'),
-    // new PlayerController(),
-  ],
-  [],
-)
+import ScreenWrap from './ScreenWrap'
+import LaserWeapon from './LaserWeapon'
+import Asteroid from './Asteroid'
+import GameManager from './GameManager'
+const Vec2 = tudi.Math.Vec2
 
 const player: tudi.Entity = new tudi.Entity(
   'player',
-  {position: new Vec2(window.innerWidth / 2, window.innerHeight / 2)/*, scale: new Vec2(1, 3)*/},
+  {position: new Vec2(window.innerWidth / 2, window.innerHeight / 2), pivot: new Vec2(21, 16)},
   [
-    new tudi.Components.SpriteComponent('assets/player.png'),
-    new tudi.Components.AudioComponent(['assets/sounds/powerup.wav']),
+    new tudi.Components.SpriteComponent('assets/ship.png'),
+    new tudi.Components.AudioComponent(['assets/sounds/laser.wav']),
+    new ScreenWrap(),
     new PlayerController(),
+    new LaserWeapon(),
   ],
-  [child1],
+  [new tudi.Entity(
+    'thrust',
+    {pivot: new Vec2(18, 4), position: new Vec2(21, 33), rotation: -Math.PI / 2},
+    [new tudi.Components.SpriteComponent('assets/thrust.png')],
+    [],
+  )],
 )
 
 const scene: tudi.Scene = new tudi.Scene(
   {
-    images: ['assets/player.png', 'assets/floor.png', 'assets/enemy.png'],
-    sounds: ['assets/sounds/blip.wav', 'assets/sounds/coin.wav', 'assets/sounds/powerup.wav'],
+    images: ['assets/ship.png', 'assets/laser.png', 'assets/thrust.png',
+      'assets/asteroid-sm.png', 'assets/asteroid-md.png', 'assets/asteroid-lg.png', 'assets/asteroid-xl.png'],
+    sounds: ['assets/sounds/hit.wav', 'assets/sounds/laser.wav', 'assets/sounds/theme.wav'],
   },
   [
+    GameManager(),
     player,
-    new tudi.Entity(
-      'floor',
-      {position: new Vec2(20, 30)},
-      [new tudi.Components.SpriteComponent('assets/floor.png')],
-      []),
-    new tudi.Entity(
-      'enemy',
-      {position: new Vec2(60, 50)},
-      [new tudi.Components.SpriteComponent('assets/enemy.png')],
-      []),
+    Asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)),
+    Asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)),
+    Asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)),
   ],
 )
 
 const game: tudi.Game = new tudi.Game(window.innerWidth, window.innerHeight)
 game.start(scene).then(() => {
-  setTimeout(() => {
-    // console.log('child1', child1.transform.position.toString(), child1.transform.worldPosition.toString())
-    // console.log('player', player.transform.position.toString(), player.transform.worldPosition.toString())
-    // console.log((<tudi.Components.SpriteComponent>player.getComponent('sprite')).sprite.localTransform)
-  }, 2000)
+ // TOODO
 })
