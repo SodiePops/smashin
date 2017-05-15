@@ -1,46 +1,53 @@
+// import * as tudi from 'tudi'
 import * as tudi from 'tudi'
+import LaserWeapon from './LaserWeapon'
 const KEYS = tudi.Keyboard.KEYS
+const Vec2 = tudi.Math.Vec2
 
 export default class PlayerController extends tudi.Components.Component {
   name = 'playerController'
-  speed = 48
+  thrust = 48
+  friction = 1.1
   scaleSpeed = 1
-  rotationSpeed = Math.PI / 2
+  turnSpeed = Math.PI
+  thrustSprite: tudi.Components.SpriteComponent
+
+  private velocity = new Vec2(0, 0)
+  private acceleration = new Vec2(0, 0)
 
   private soundID: number
 
   setup (): void {
-    // Do nothing
+    this.thrustSprite = <tudi.Components.SpriteComponent>(<tudi.Entity>this.entity.getChild('thrust')).getComponent('sprite')
   }
 
   update (dt: number): void {
     const t = this.entity.transform
     const a = <tudi.Components.AudioComponent>this.entity.getComponent('audio')
+
     if (tudi.Keyboard.isDown(KEYS.LEFT))
-      t.position.x -= this.speed * dt
+      t.rotation -= this.turnSpeed * dt
     if (tudi.Keyboard.isDown(KEYS.RIGHT))
-      t.position.x += this.speed * dt
-    if (tudi.Keyboard.isDown(KEYS.UP))
-      t.position.y -= this.speed * dt
-    if (tudi.Keyboard.isDown(KEYS.DOWN))
-      t.position.y += this.speed * dt
+      t.rotation += this.turnSpeed * dt
 
-    if (tudi.Keyboard.isDown(KEYS.W))
-      t.scale.y += this.scaleSpeed * dt
-    if (tudi.Keyboard.isDown(KEYS.A))
-      t.scale.x -= this.scaleSpeed * dt
-    if (tudi.Keyboard.isDown(KEYS.S))
-      t.scale.y -= this.scaleSpeed * dt
-    if (tudi.Keyboard.isDown(KEYS.D))
-      t.scale.x += this.scaleSpeed * dt
+    if (tudi.Keyboard.isDown(KEYS.UP)) {
+      this.thrustSprite.sprite.visible = true
+      this.acceleration = Vec2.MULT(t.right, this.thrust)
+    } else {
+      this.thrustSprite.sprite.visible = false
+      this.acceleration = new Vec2(0, 0)
+    }
+    this.velocity = Vec2.ADD(this.velocity, Vec2.MULT(this.acceleration, dt))
+    t.position = Vec2.ADD(t.position, this.velocity)
+    this.velocity = Vec2.DIV(this.velocity, this.friction)
 
-    if (tudi.Keyboard.isDown(KEYS.SPACEBAR))
-      t.rotation += this.rotationSpeed * dt
-
-    if (tudi.Keyboard.isDown(KEYS.Q)) {
-      const s = a.sounds['assets/sounds/powerup.wav']
+    if (tudi.Keyboard.isDown(KEYS.SPACEBAR)) {
+      const s = a.sounds['assets/sounds/laser.wav']
       if (!s.playing(this.soundID)) {
         this.soundID = s.play()
+
+        const l = this.entity.getComponent('laserWeapon') as LaserWeapon
+        l.fire()
       }
     }
   }
