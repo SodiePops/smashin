@@ -25,7 +25,7 @@ export default class PlayerController extends tudi.Components.Component {
   setup (): void {
     this.thrustSprite = <tudi.Components.SpriteComponent>(<tudi.Entity>this.entity.getChild('thrust')).getComponent('sprite')
     this.entity.update$.observe(this.update.bind(this))
-    tudi.Keyboard.keyboard$.observe(this.processInput.bind(this))
+    tudi.Keyboard.keyboard$.until(this.entity.destroy$).observe(this.processInput.bind(this))
   }
 
   processInput (keyMap: tudi.Keyboard.KeyMap): void {
