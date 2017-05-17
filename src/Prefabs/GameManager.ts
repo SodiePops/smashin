@@ -4,10 +4,15 @@ const Vec2 = tudi.Math.Vec2
 
 class GameManager extends tudi.Components.Component {
   name = 'gameManager'
-  hasPlayedTheme = false
 
   setup (): void {
-    this.entity.update$.observe(this.update.bind(this))
+    this.entity.scene.actions
+      .channel<number>('asteroid-count')
+      .until(this.entity.destroy$)
+      .scan((count, n) => count + n, 0)
+      .observe(count => {
+        if (count === 0) this.restartGame()
+      })
   }
 
   playTheme (): void {
@@ -24,20 +29,6 @@ class GameManager extends tudi.Components.Component {
       .addEntity(asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
     this.entity.scene
       .addEntity(asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
-  }
-
-  update (): void {
-    if (!this.hasPlayedTheme) {
-      this.playTheme()
-      this.hasPlayedTheme = true
-    }
-    for (const e of Object.values(this.entity.scene.entities)) {
-      if (e.name === 'asteroid') {
-        return
-      }
-    }
-    // No more asteroids, restart game
-    this.restartGame()
   }
 }
 

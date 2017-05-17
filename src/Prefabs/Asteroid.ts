@@ -22,6 +22,8 @@ class Asteroid extends tudi.Components.Component {
 
     this.entity.update$.observe(this.update.bind(this))
     this.entity.destroy$.observe(this.destroy.bind(this))
+
+    this.entity.scene.actions.next({ type: 'asteroid-count', payload: 1 })
   }
 
   update (): void {
@@ -61,6 +63,8 @@ class Asteroid extends tudi.Components.Component {
       case 'sm':
         break
     }
+
+    this.entity.scene.actions.next({ type: 'asteroid-count', payload: -1 })
   }
 }
 
