@@ -14,34 +14,45 @@ export default class PlayerController extends tudi.Components.Component {
 
   private velocity = new Vec2(0, 0)
   private acceleration = new Vec2(0, 0)
+  private actions = {
+    thrust: 0,
+    rotation: 0,
+    shoot: false,
+  }
 
   private soundID: number
 
   setup (): void {
     this.thrustSprite = <tudi.Components.SpriteComponent>(<tudi.Entity>this.entity.getChild('thrust')).getComponent('sprite')
+    this.entity.update$.observe(this.update.bind(this))
+    tudi.Keyboard.keyboard$.observe(this.processInput.bind(this))
+  }
+
+  processInput (keyMap: tudi.Keyboard.KeyMap): void {
+    this.actions = { thrust: 0, rotation: 0, shoot: false }
+    if (keyMap[KEYS.LEFT]) this.actions.rotation = -1
+    if (keyMap[KEYS.RIGHT]) this.actions.rotation = 1
+    if (keyMap[KEYS.UP]) this.actions.thrust = 1
+    if (keyMap[KEYS.SPACEBAR]) this.actions.shoot = true
   }
 
   update (dt: number): void {
     const t = this.entity.transform
     const a = <tudi.Components.AudioComponent>this.entity.getComponent('audio')
+    const { thrust, rotation, shoot } = this.actions
 
-    if (tudi.Keyboard.isDown(KEYS.LEFT))
-      t.rotation -= this.turnSpeed * dt
-    if (tudi.Keyboard.isDown(KEYS.RIGHT))
-      t.rotation += this.turnSpeed * dt
+    // Show the thrust sprite if thrust > 0
+    this.thrustSprite.sprite.visible = !!thrust
 
-    if (tudi.Keyboard.isDown(KEYS.UP)) {
-      this.thrustSprite.sprite.visible = true
-      this.acceleration = Vec2.MULT(t.right, this.thrust)
-    } else {
-      this.thrustSprite.sprite.visible = false
-      this.acceleration = new Vec2(0, 0)
-    }
+    t.rotation += rotation * this.turnSpeed * dt
+    this.acceleration = Vec2.MULT(t.right, this.thrust * thrust)
+
+    // Makeshift physics calculations
     this.velocity = Vec2.ADD(this.velocity, Vec2.MULT(this.acceleration, dt))
     t.position = Vec2.ADD(t.position, this.velocity)
     this.velocity = Vec2.DIV(this.velocity, this.friction)
 
-    if (tudi.Keyboard.isDown(KEYS.SPACEBAR)) {
+    if (shoot) {
       const s = a.sounds['assets/sounds/laser.wav']
       if (!s.playing(this.soundID)) {
         this.soundID = s.play()

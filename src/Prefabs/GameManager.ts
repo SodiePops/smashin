@@ -1,25 +1,13 @@
 import * as tudi from 'tudi'
-import Asteroid from './Asteroid'
+import asteroid from './Asteroid'
 const Vec2 = tudi.Math.Vec2
 
-export default function GameManager (): tudi.Entity {
-  return new tudi.Entity(
-    'gameManager',
-    {},
-    [
-      new GameManagerComponent(),
-      new tudi.Components.AudioComponent(['assets/sounds/theme.wav']),
-    ],
-    [],
-  )
-}
-
-class GameManagerComponent extends tudi.Components.Component {
+class GameManager extends tudi.Components.Component {
   name = 'gameManager'
   hasPlayedTheme = false
 
   setup (): void {
-    // T O D O
+    this.entity.update$.observe(this.update.bind(this))
   }
 
   playTheme (): void {
@@ -31,11 +19,11 @@ class GameManagerComponent extends tudi.Components.Component {
   restartGame (): void {
     this.playTheme()
     this.entity.scene
-      .addEntity(Asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
+      .addEntity(asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
     this.entity.scene
-      .addEntity(Asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
+      .addEntity(asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
     this.entity.scene
-      .addEntity(Asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
+      .addEntity(asteroid('xl', new Vec2(Math.random() * window.innerWidth, Math.random() * window.innerHeight)))
   }
 
   update (): void {
@@ -51,4 +39,16 @@ class GameManagerComponent extends tudi.Components.Component {
     // No more asteroids, restart game
     this.restartGame()
   }
+}
+
+export default function gameManager (): tudi.Entity {
+  return new tudi.Entity(
+    'gameManager',
+    {},
+    [
+      new GameManager(),
+      new tudi.Components.AudioComponent(['assets/sounds/theme.wav']),
+    ],
+    [],
+  )
 }

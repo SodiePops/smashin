@@ -8,6 +8,8 @@ export default class ScreenWrap extends tudi.Components.Component {
   setup (): void {
     this.width = window.innerWidth
     this.height = window.innerHeight
+
+    this.entity.update$.observe(this.update.bind(this))
   }
 
   update (): void {
